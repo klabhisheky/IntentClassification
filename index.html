@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Assignment : Searchlight Health</title>
+        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+        <link href="css/styles.css" rel="stylesheet" />
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container">
+                <a class="navbar-brand" href="#!">Assignment : Searchlight Health</a>                
+            </div>
+        </nav>
+        <!-- Page Content-->
+        <div class="container">
+            <header class=" my-4">
+                <h1 class="display-6">Intent Classification</h1>
+                    <div class="form-row">
+                        <div class="col-12 col-md-9 mb-2 mb-md-0"><input class="form-control form-control-lg" type="text" id="user_input" placeholder="Search here..." /></div>
+                        <div class="col-12 col-md-3"><button class="btn btn-block btn-lg btn-primary" type="text" id="btn-enquiry">Enquire!</button></div>
+                        <div class="col-12 col-md-6"><p><b><i>Sample query : Low cost best heart surgeon near me.</i></b></p></div>                      
+                    </div>
+            </header>
+            <div class="row text-center" id="dynamic-placeholder">
+                            <!--Add elements dynamically here-->
+            </div>
+        </div>
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="js/scripts.js"></script>
+        <script type="text/javascript">
+            document.getElementById("btn-enquiry").addEventListener("click", fetchAPI);
+
+            function removeAllChildNodes(parent) {
+                while(parent.firstChild) {
+                    parent.removeChild(parent.firstChild);
+                }
+            }
+
+            function addToPage(result) {
+                let result_palceholder = document.getElementById("dynamic-placeholder");
+                removeAllChildNodes(result_palceholder);
+                if(Object.keys(result).length == 0){
+                    var div = document.createElement('div');
+                    div.innerHTML = '<p><b> Unalbe to find Intent, Please try again with some other query! </b></p>';
+                    div.className = 'col-md-12'; 
+                    result_palceholder.appendChild(div);
+                }else{
+                    for (let key in result) {
+                        let value = result[key];                    
+                        var div = document.createElement('div');
+                        div.innerHTML = '<p><b>' + value + '</b> : ' +   key + ' </p>';
+                        div.className = 'col-md-4'; 
+                        result_palceholder.appendChild(div);
+                    }
+                }
+                console.log("LOG:API_RESPONSE ", result);
+            }
+
+            function logError(error) {
+              console.log('LOG:[ERROR] \n', error);
+            }
+
+            function validateResponse(response) {
+                if (!response.ok) {
+                    throw Error(response.statusText);
+                }
+                return response;
+            }
+
+            function readResponseAsJSON(response) {
+                let classified_intent = response.json();
+                return classified_intent;
+            }
+
+            function fetchJSON(pathToResource) {
+              fetch(pathToResource, { method: "GET", referrer: "" })
+              .then(validateResponse)
+              .then(readResponseAsJSON)
+              .then(addToPage)
+              .catch(logError);
+            }
+
+            function fetchAPI() {
+                let user_query = document.getElementById("user_input").value;
+                if(user_query == ""){
+                    alert("Enter some text first!");
+                    return;
+                }
+                fetchJSON("http://abhisheky.pythonanywhere.com/intent/" + user_query);              
+                
+            }
+
+        </script>
+    </body>
+</html>
