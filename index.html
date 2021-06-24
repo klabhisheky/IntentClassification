@@ -31,7 +31,7 @@
         </div>
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="js/scripts.js"></script>
+        <script src="js/constant.js"></script>
         <script type="text/javascript">
             document.getElementById("btn-enquiry").addEventListener("click", fetchAPI);
 
@@ -91,7 +91,7 @@
                     alert("Enter some text first!");
                     return;
                 }
-                fetchJSON("http://abhisheky.pythonanywhere.com/intent/" + user_query);              
+                fetchJSON(SERVER + API_ENDPOINT + user_query);              
                 
             }
 
